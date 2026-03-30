@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# VS Code / IDE
+.vscode/
+.idea/
+
+# OS Files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Chroma DB (wichtig!)
+db/
+
+# Daten (PDFs etc.)
+data/
+
+# Modelle (falls lokal gespeichert)
+ollama-models/
+
+# Cache / Temp
+.cache/
+
+# Environment files
+.env
+
+# Jupyter (falls später)
+.ipynb_checkpoints/

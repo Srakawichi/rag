@@ -1,0 +1,10 @@
+langchain
+langchain-core
+langchain-ollama
+langchain-chroma
+langchain-text-splitters
+
+pypdf
+requests
+tqdm
+rank_bm25
