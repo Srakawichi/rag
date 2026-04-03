@@ -26,7 +26,7 @@ The model answers questions based on the content of provided PDF files.
 ---
 
 ## Project Structure
-
+```bash
 /mnt/d/rag/
 │
 ├── data/ # PDFs
@@ -35,7 +35,7 @@ The model answers questions based on the content of provided PDF files.
 ├── query.py # Ask questions
 ├── config.py # Configurations
 ├── requirements.txt
-
+```
 
 ---
 
