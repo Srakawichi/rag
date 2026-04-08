@@ -7,21 +7,48 @@ The model answers questions based on the content of provided PDF files.
 
 ---
 
-## Features
-- Fully local (no cloud required)
-- Works with Ollama LLMs
-- Uses embeddings for semantic search
-- PDF-based knowledge base
-- Simple and extendable architecture
-
----
-
 ## Tech Stack
 - Ollama
 - LangChain
 - ChromaDB
 - Python
 - WSL (recommended for Windows)
+
+---
+
+## Quick start
+```bash
+# 1. Start Ollama
+ollama serve
+
+# 2. Install models
+ollama pull llama3
+ollama pull nomic-embed-text
+
+# 3. Setup project
+cd /mnt/d/rag
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# 4. Add PDFs
+# → Put your files into /mnt/d/rag/data
+
+# 5. Build vector DB
+python ingest.py
+
+# 6. Ask questions
+python query.py
+```
+
+---
+
+## Features
+- Fully local (no cloud required)
+- Works with Ollama LLMs
+- Uses embeddings for semantic search
+- PDF-based knowledge base
+- Simple and extendable architecture
 
 ---
 
