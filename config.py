@@ -1,5 +1,5 @@
-DATA_PATH = "/mnt/d/repos/rag/data"
-DB_PATH = "/mnt/d/repos/rag/db"
+DATA_PATH = "data"
+DB_PATH = "db"
 
 LLM_MODEL = "mistral"
 EMBED_MODEL = "nomic-embed-text"
