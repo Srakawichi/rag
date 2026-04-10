@@ -26,6 +26,7 @@ ollama pull llama3
 ollama pull nomic-embed-text
 
 # 3. Setup project
+git clone https://github.com/Srakawichi/rag.git
 cd rag
 python3 -m venv .venv
 source .venv/bin/activate
@@ -93,7 +94,7 @@ OLLAMA_NUM_GPU=1 ollama serve
 ---
 
 ### 2. Setup Environment
-
+git clone https://github.com/Srakawichi/rag.git
 cd rag
 python3 -m venv .venv
 source .venv/bin/activate
