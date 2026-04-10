@@ -26,13 +26,13 @@ ollama pull llama3
 ollama pull nomic-embed-text
 
 # 3. Setup project
-cd /mnt/d/rag
+cd rag
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
 
 # 4. Add PDFs
-# → Put your files into /mnt/d/rag/data
+# → Put your files into data
 
 # 5. Build vector DB
 python ingest.py
@@ -54,7 +54,7 @@ python query.py
 
 ## Project Structure
 ```bash
-/mnt/d/rag/
+rag/
 │
 ├── data/ # PDFs
 ├── db/ # Vector database (Chroma)
@@ -94,7 +94,7 @@ OLLAMA_NUM_GPU=1 ollama serve
 
 ### 2. Setup Environment
 
-cd /mnt/d/rag
+cd rag
 python3 -m venv .venv
 source .venv/bin/activate
 
@@ -116,8 +116,8 @@ ollama pull nomic-embed-text
 
 Example `config.py`:
 
-DATA_PATH = "/mnt/d/rag/data"
-DB_PATH = "/mnt/d/rag/db"
+DATA_PATH = "data"
+DB_PATH = "db"
 
 LLM_MODEL = "llama3"
 EMBED_MODEL = "nomic-embed-text"
@@ -126,8 +126,7 @@ CHUNK_SIZE = 800
 CHUNK_OVERLAP = 150
 TOP_K = 3
 
-OLLAMA_BASE_URL = "http://localhost:11434
-"
+OLLAMA_BASE_URL = "http://localhost:11434"
 
 
 ---
@@ -137,7 +136,7 @@ OLLAMA_BASE_URL = "http://localhost:11434
 ### 1. Add PDFs
 Place your PDF files in:
 
-/mnt/d/rag/data
+rag/data
 
 
 ---
