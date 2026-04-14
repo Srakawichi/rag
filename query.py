@@ -44,10 +44,8 @@ def rerank_chunks(llm, docs, question):
 
         scored_docs.append((doc, score))
 
-    # sortiere nach Score
     scored_docs.sort(key=lambda x: x[1], reverse=True)
 
-    # nur Top 3 behalten
     return [doc for doc, score in scored_docs[:3]]
 
 def filter_relevant_chunks(docs, question):
@@ -91,7 +89,6 @@ def main():
         print("Keine Frage eingegeben.")
         return
 
-    # Query verbessern
     enhanced_query = clean_text(f"""
     Find detailed technical instructions and steps.
     Focus on commands and setup.
@@ -109,25 +106,19 @@ def main():
         embedding_function=embedding_function
     )
 
-   # Embedding Search
     embedding_results = db.similarity_search(enhanced_query, k=10)
 
-    # Keyword Search (auf denselben Docs)
     keyword_results = keyword_search(embedding_results, question)
 
-    # kombinieren (Duplicates vermeiden)
     combined = list({id(doc): doc for doc in (embedding_results + keyword_results)}.values())
 
-    # LLM vorbereiten für reranking
     llm = OllamaLLM(
         model=LLM_MODEL,
         base_url=OLLAMA_BASE_URL
     )
 
-    # reranking
     results = rerank_chunks(llm, combined, question)
 
-    # Kontext strukturieren
     context_text = ""
     for i, doc in enumerate(results):
         context_text += f"[Source {i+1}]\n{clean_text(doc.page_content)}\n\n"
