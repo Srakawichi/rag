@@ -39,7 +39,6 @@ def main():
     chunks = splitter.split_documents(docs)
     print(f"Chunks: {len(chunks)}")
 
-    # alte DB löschen (für MVP ok)
     if os.path.exists(DB_PATH):
         shutil.rmtree(DB_PATH)
 
