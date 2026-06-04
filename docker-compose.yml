@@ -4,14 +4,20 @@ services:
     ports:
       - "11434:11434"
     volumes:
-      - ollama_data:/root/.ollama
+      - ${HOME}/.ollama:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     healthcheck:
       test: ["CMD", "ollama", "list"]
       interval: 5s
       timeout: 5s
       retries: 20
       start_period: 15s
-
   rag:
     build: .
     depends_on:
@@ -24,6 +30,3 @@ services:
       - OLLAMA_BASE_URL=http://ollama:11434
     stdin_open: true
     tty: true
-
-volumes:
-  ollama_data:
