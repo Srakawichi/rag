@@ -121,5 +121,6 @@ OLLAMA_BASE_URL = "http://localhost:11434"
 
 ## Notes
 - Works completely offline
-- Best performance with GPU
 - `data/` and `db/` are excluded from git — add your own PDFs after cloning
+- Ollama models are stored in `${HOME}/.ollama` on the host — shared between Docker and a local Ollama installation, and persist across container restarts
+- Hybrid search: combines semantic embeddings with BM25 keyword search for better retrieval
