@@ -1,0 +1,8 @@
+langchain
+langchain-core
+langchain-community
+langchain-ollama
+langchain-chroma
+langchain-text-splitters
+rank_bm25
+ollama
