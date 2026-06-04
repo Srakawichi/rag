@@ -87,7 +87,7 @@ rag/
 - Docker + Docker Compose (for Docker setup)
 - Python 3.10+ (for local setup)
 - Ollama installed (for local setup)
-- GPU (optional but recommended)
+- NVIDIA GPU + NVIDIA Container Toolkit (required for Docker setup)
 
 ---
 
