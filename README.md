@@ -12,18 +12,38 @@ The model answers questions based on the content of provided PDF files.
 - LangChain
 - ChromaDB
 - Python
+- Docker / Docker Compose
 - WSL (recommended for Windows)
 
 ---
 
-## Quick start
+## Quick start (Docker)
+```bash
+# 1. Clone repo
+git clone https://github.com/Srakawichi/rag.git
+cd rag
+
+# 2. Add PDFs
+# → Put your files into data/
+
+# 3. Start Ollama + pull models automatically
+docker compose up model-init
+
+# 4. Build vector DB
+docker compose run --rm rag python ingest.py
+
+# 5. Ask questions
+docker compose run --rm -it rag python query.py
+```
+
+## Quick start (local)
 ```bash
 # 1. Start Ollama
 ollama serve
 
 # 2. Install models
-ollama pull llama3
-ollama pull nomic-embed-text
+ollama pull mistral
+ollama pull jina/jina-embeddings-v2-base-de:latest
 
 # 3. Setup project
 git clone https://github.com/Srakawichi/rag.git
@@ -33,7 +53,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 
 # 4. Add PDFs
-# → Put your files into data
+# → Put your files into data/
 
 # 5. Build vector DB
 python ingest.py
@@ -57,19 +77,22 @@ python query.py
 ```bash
 rag/
 │
-├── data/ # PDFs
-├── db/ # Vector database (Chroma)
-├── ingest.py # Build knowledge base
-├── query.py # Ask questions
-├── config.py # Configurations
+├── data/                 # PDFs
+├── db/                   # Vector database (Chroma)
+├── ingest.py             # Build knowledge base
+├── query.py              # Ask questions
+├── config.py             # Configurations
+├── Dockerfile
+├── docker-compose.yml
 ├── requirements.txt
 ```
 
 ---
 
 ## Requirements
-- Python 3.10+
-- Ollama installed
+- Docker + Docker Compose (for Docker setup)
+- Python 3.10+ (for local setup)
+- Ollama installed (for local setup)
 - GPU (optional but recommended)
 
 Check GPU:
@@ -107,8 +130,8 @@ pip install -r requirements.txt
 
 ### 3. Install Models
 
-ollama pull llama3
-ollama pull nomic-embed-text
+ollama pull mistral
+ollama pull jina/jina-embeddings-v2-base-de:latest
 
 
 ---
@@ -121,7 +144,7 @@ DATA_PATH = "data"
 DB_PATH = "db"
 
 LLM_MODEL = "llama3"
-EMBED_MODEL = "nomic-embed-text"
+EMBED_MODEL = "jina/jina-embeddings-v2-base-de:latest"
 
 CHUNK_SIZE = 800
 CHUNK_OVERLAP = 150

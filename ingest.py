@@ -1,12 +1,21 @@
 import os
 import shutil
 
+import ollama
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_ollama import OllamaEmbeddings
 from langchain_chroma import Chroma
 
-from config import DATA_PATH, DB_PATH, EMBED_MODEL, CHUNK_SIZE, CHUNK_OVERLAP, OLLAMA_BASE_URL
+from config import DATA_PATH, DB_PATH, EMBED_MODEL, LLM_MODEL, CHUNK_SIZE, CHUNK_OVERLAP, OLLAMA_BASE_URL
+
+
+def ensure_models():
+    client = ollama.Client(host=OLLAMA_BASE_URL)
+    for model in [LLM_MODEL, EMBED_MODEL]:
+        print(f"Pulling {model}...")
+        client.pull(model)
+        print(f"  {model} ready.")
 
 
 def load_documents():
@@ -22,6 +31,7 @@ def load_documents():
 
 
 def main():
+    ensure_models()
     print("Loading PDFs...")
     docs = load_documents()
 
@@ -40,7 +50,12 @@ def main():
     print(f"Chunks: {len(chunks)}")
 
     if os.path.exists(DB_PATH):
-        shutil.rmtree(DB_PATH)
+        for item in os.listdir(DB_PATH):
+            item_path = os.path.join(DB_PATH, item)
+            if os.path.isdir(item_path):
+                shutil.rmtree(item_path)
+            else:
+                os.remove(item_path)
 
     embeddings = OllamaEmbeddings(
         model=EMBED_MODEL,

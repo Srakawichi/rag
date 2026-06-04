@@ -1,0 +1,11 @@
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+.git/
+db/
+data/
+.env
+.vscode/
+.idea/

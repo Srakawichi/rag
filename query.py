@@ -1,9 +1,18 @@
+import ollama
 from langchain_ollama import OllamaEmbeddings, OllamaLLM
 from langchain_chroma import Chroma
 from langchain_core.prompts import PromptTemplate
 from rank_bm25 import BM25Okapi
 
 from config import DB_PATH, EMBED_MODEL, LLM_MODEL, TOP_K, OLLAMA_BASE_URL
+
+
+def ensure_models():
+    client = ollama.Client(host=OLLAMA_BASE_URL)
+    for model in [LLM_MODEL, EMBED_MODEL]:
+        print(f"Pulling {model}...")
+        client.pull(model)
+        print(f"  {model} ready.")
 
 def clean_text(text):
     return text.encode("utf-8", "ignore").decode("utf-8")
@@ -83,6 +92,7 @@ Answer:
 
 
 def main():
+    ensure_models()
     question = input("Frage: ").strip()
 
     if not question:
