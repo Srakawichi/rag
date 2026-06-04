@@ -9,3 +9,4 @@ pypdf
 requests
 tqdm
 rank_bm25
+ollama
