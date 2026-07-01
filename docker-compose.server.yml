@@ -1,0 +1,19 @@
+# Deployment auf dem bestehenden Server (siehe README: "Als Modell in Open WebUI nutzen").
+# Nutzt die bereits laufende Ollama-Instanz aus dem separaten ollama-stack
+# (Port 11434) statt eine eigene zu starten.
+#
+# Start:   docker compose -f docker-compose.server.yml up -d --build
+# Ingest:  docker compose -f docker-compose.server.yml run --rm rag-api python ingest.py
+services:
+  rag-api:
+    build: .
+    container_name: rag-api
+    restart: unless-stopped
+    network_mode: "host"
+    command: uvicorn api:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./data:/app/data
+      - ./db:/app/db
+    environment:
+      - OLLAMA_BASE_URL=http://localhost:11434
+      - RAG_API_KEY=${RAG_API_KEY:-}

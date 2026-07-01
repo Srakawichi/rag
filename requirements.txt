@@ -10,3 +10,6 @@ requests
 tqdm
 rank_bm25
 ollama
+
+fastapi
+uvicorn[standard]
