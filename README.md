@@ -101,7 +101,7 @@ rag/
 DATA_PATH = "data"
 DB_PATH = "db"
 
-LLM_MODEL = "mistral"
+LLM_MODEL = "llama3.3:70b"
 EMBED_MODEL = "jina/jina-embeddings-v2-base-de:latest"
 
 CHUNK_SIZE = 1200

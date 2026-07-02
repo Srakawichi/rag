@@ -1,10 +1,11 @@
 import ollama
+from langchain_core.documents import Document
 from langchain_ollama import OllamaEmbeddings, OllamaLLM
 from langchain_chroma import Chroma
 from langchain_core.prompts import PromptTemplate
 from rank_bm25 import BM25Okapi
 
-from config import DB_PATH, EMBED_MODEL, LLM_MODEL, OLLAMA_BASE_URL
+from config import DB_PATH, EMBED_MODEL, LLM_MODEL, OLLAMA_BASE_URL, TOP_K
 
 
 def ensure_models():
@@ -17,6 +18,14 @@ def ensure_models():
 
 def clean_text(text):
     return text.encode("utf-8", "ignore").decode("utf-8")
+
+
+def load_all_documents(db):
+    data = db.get(include=["documents", "metadatas"])
+    return [
+        Document(page_content=doc, metadata=meta or {})
+        for doc, meta in zip(data["documents"], data["metadatas"])
+    ]
 
 
 def keyword_search(docs, query):
@@ -82,12 +91,7 @@ Answer:
 
 
 def answer_question(question: str):
-    enhanced_query = clean_text(f"""
-    Find detailed technical instructions and steps.
-    Focus on commands and setup.
-
-    Question: {question}
-    """)
+    question = clean_text(question)
 
     embedding_function = OllamaEmbeddings(
         model=EMBED_MODEL,
@@ -99,11 +103,13 @@ def answer_question(question: str):
         embedding_function=embedding_function
     )
 
-    embedding_results = db.similarity_search(enhanced_query, k=10)
+    embedding_results = db.similarity_search(question, k=TOP_K * 2)
 
-    keyword_results = keyword_search(embedding_results, question)
+    # BM25 over the full corpus (not just the embedding hits) so exact
+    # terms/names that dense embeddings tend to miss can still surface.
+    keyword_results = keyword_search(load_all_documents(db), question)
 
-    combined = list({id(doc): doc for doc in (embedding_results + keyword_results)}.values())
+    combined = list({doc.page_content: doc for doc in (embedding_results + keyword_results)}.values())
 
     llm = OllamaLLM(
         model=LLM_MODEL,
