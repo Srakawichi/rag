@@ -146,13 +146,27 @@ port `11434`, Open WebUI on port `3000`, same Ubuntu host).
 git clone https://github.com/Srakawichi/rag.git
 cd rag
 
-# 2. Add PDFs
+# 2. Proxy for the Docker *build* step (pip install needs internet access).
+#    docker compose only forwards these into the build if they're set —
+#    a .env file is more reliable than relying on the shell having
+#    inherited /etc/environment. Match the values from the infra protocol.
+cat > .env <<EOF
+HTTP_PROXY=http://PROXY_IP:PROXY_PORT/
+HTTPS_PROXY=http://PROXY_IP:PROXY_PORT/
+NO_PROXY=localhost,127.0.0.1
+http_proxy=http://PROXY_IP:PROXY_PORT/
+https_proxy=http://PROXY_IP:PROXY_PORT/
+no_proxy=localhost,127.0.0.1
+RAG_API_KEY=$(openssl rand -hex 24)
+EOF
+
+# 3. Add PDFs
 # → put files into data/
 
-# 3. Build (or rebuild) the vector DB — reuses the existing Ollama instance
+# 4. Build (or rebuild) the vector DB — reuses the existing Ollama instance
 docker compose -f docker-compose.server.yml run --rm rag-api python ingest.py
 
-# 4. Start the API (stays up, restarts with the host)
+# 5. Start the API (stays up, restarts with the host)
 docker compose -f docker-compose.server.yml up -d --build
 ```
 
@@ -163,20 +177,15 @@ of the already-running `ollama-stack`, so nothing about that stack needs to
 be touched or restarted.
 
 Since it uses host networking, port `8000` is bound directly on the server's
-network interfaces (same exposure level `ollama` already has on `11434`).
-Set an API key before exposing this beyond localhost:
-
-```bash
-echo "RAG_API_KEY=$(openssl rand -hex 24)" > .env
-docker compose -f docker-compose.server.yml up -d --build
-```
+network interfaces (same exposure level `ollama` already has on `11434`) —
+hence generating a `RAG_API_KEY` in the `.env` file above.
 
 ### Register in Open WebUI
 
 1. Open `http://<Server-IP>:3000` → **Admin Settings → Connections**
-2. Add a connection: **Type:** OpenAI API, **Base URL:** `http://<Server-IP>:8000/v1`, **Key:** the `RAG_API_KEY` value (or any non-empty string if unset)
+2. Add a connection: **Type:** OpenAI API, **Base URL:** `http://<Server-IP>:8000/v1`, **Key:** the `RAG_API_KEY` value from `.env`
 3. Save — the model **"Wissensdatenbank (RAG)"** now appears in the model selector, next to `llama3.3:70b`, `qwen2.5-coder:32b`, etc.
 
 Rebuilding the knowledge base later (new/updated PDFs) just means re-running
-step 3 (`ingest.py`) — the running `rag-api` container reads `db/` fresh on
+step 4 (`ingest.py`) — the running `rag-api` container reads `db/` fresh on
 every request, no restart needed.

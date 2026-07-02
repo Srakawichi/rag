@@ -6,7 +6,15 @@
 # Ingest:  docker compose -f docker-compose.server.yml run --rm rag-api python ingest.py
 services:
   rag-api:
-    build: .
+    build:
+      context: .
+      args:
+        HTTP_PROXY: ${HTTP_PROXY:-}
+        HTTPS_PROXY: ${HTTPS_PROXY:-}
+        NO_PROXY: ${NO_PROXY:-}
+        http_proxy: ${http_proxy:-}
+        https_proxy: ${https_proxy:-}
+        no_proxy: ${no_proxy:-}
     container_name: rag-api
     restart: unless-stopped
     network_mode: "host"
